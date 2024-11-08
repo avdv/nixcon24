@@ -6,7 +6,7 @@ css: assets/style.css
 revealOptions:
   transition: 'fade'
 ---
-<!-- .slide: data-background-iframe="./slide1_bg.html" -->
+<!-- .slide: data-background-iframe="./assets/slide1_bg.html" -->
 
 ## Integrating Buck2 and Nix for fun and profit
 
