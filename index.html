@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,13 +12,11 @@
     <link rel="stylesheet" href="./css/highlight/base16/zenburn.css" />
 
     <link rel="stylesheet" href="./_assets/assets/style.css" />
+
   </head>
   <body>
     <div class="reveal">
-      <div class="slides">
-        <section data-markdown data-separator="\r?\n---\r?\n" data-separator-vertical="\r?\n----\r?\n">
-          <textarea data-template>
-            
+      <div class="slides"><section  data-markdown><script type="text/template">
 <!-- .slide: data-background-iframe="./assets/slide1_bg.html" -->
 
 ## Integrating Buck2 and Nix for fun and profit
@@ -27,19 +25,15 @@ by Claudio Bley
 
 <p style="font-size: smaller">NixCon 2024 (EU) &mdash; 26th October 2024</p>
 
-Note: Me, scalable builds group, tweag. Polyglot build system.
-
----
-
+<aside class="notes"><p>Me, scalable builds group, tweag. Polyglot build system.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
 ## Motivation
 
 * Mercury https://mercury.com/
 * monorepo
 * long deployment times
 * increase developer happiness (fast turn-around, git branch switching)
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Collaboration
 
 * Mercury, Ian-Woo Kim
@@ -47,9 +41,7 @@ Note: Me, scalable builds group, tweag. Polyglot build system.
    - T. Schmits, C. Shao, S. Visscher (GHC)
    - A. Herrmann, C. Bley (build)
 * Well-Typed, M. Pickering, Z. Duggal
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Codebase
 
 * 1.1M lines Haskell
@@ -57,9 +49,7 @@ Note: Me, scalable builds group, tweag. Polyglot build system.
 * uses ghc from nix (heavily patched) and haskell libraries from nix (not haskell.nix)
 * uses flakes ❄
 * Typescript and code generation
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 <img alt="" src="assets/buck2_logo.svg" width="20%" style="float:right; margin: 0 5% 2% 5%"/>
 
 ## Buck2
@@ -71,10 +61,8 @@ https://buck2.build/
 * polyglot build system from Meta
 * supports distributed builds and caching (like Bazel)
 
-Notes: still being worked on, no official release yet, just use latest snapshots, author of Build Systems a la cart paper
-
----
-
+<aside class="notes"><p>still being worked on, no official release yet, just use latest snapshots, author of Build Systems a la cart paper</p>
+</aside></script></section><section  data-markdown><script type="text/template">
 ## Introducing buck2.nix
 
 ```
@@ -93,21 +81,17 @@ nix.rules.package(
 * calls `nix build`
 * output is a symlink to the nix store
 * also returns `RunInfo` for the binaries
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Relatedly...
 
 For Bazel: https://github.com/tweag/rules_nixpkgs
 
 For buck2: https://github.com/thoughtpolice/buck2-nix
 
-Note: this project provides an alternative prelude which is incompatible.
+<aside class="notes"><p>this project provides an alternative prelude which is incompatible.
 (does not provide Haskell rules) Also, does not support flakes. (but took
-inspiration for our rules)
-
----
-
+inspiration for our rules)</p>
+</aside></script></section><section  data-markdown><script type="text/template">
 ## Buck2 project organization
 
 * root - the project
@@ -117,17 +101,13 @@ inspiration for our rules)
     - `@toolchains//:cxx` => C/C++ toolchain
     - `@toolchains//:haskell` => Haskell Toolchain
     - ...
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Toolchains with Nix
 
 * add a flake at `toolchains/nix`
 * wire up ghc package from toolchains nix flake and expose it as `@toolchains//:haskell` target
 * repeat for other toolchains...
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Haskell Integration
 
 `ghcWithPackages` + nix shell
@@ -135,25 +115,19 @@ inspiration for our rules)
 * provides a complete ghc environment, with ghc package DB
 * "monolithic"
 * out of control for buck2
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Haskell Integration
 
 instead:
 
 * let Buck2 control building nix packages individually
 * fine-grained management of haskell dependencies per target
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Introducing dynamic actions
 
 * build dependency tree is static
 * *but* the action graph can contain dynamic actions
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 <!-- ## Example project -->
 
 <!-- flake.nix => buck2 -->
@@ -176,9 +150,7 @@ postInstall = (drv.postInstall or "") + ''
 '';
 ```
 </div>
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Haskell Integration (continued)
 
 ```nix
@@ -200,9 +172,7 @@ packages = {
    ...
 }
 ```
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Haskell Integration (continued)
 
 ```console
@@ -213,10 +183,8 @@ $ nix eval --json \
   path:toolchains/nix#haskellPackages
 ```
 
-Notes: get a list of all haskell library derivations
-
----
-
+<aside class="notes"><p>get a list of all haskell library derivations</p>
+</aside></script></section><section  data-markdown><script type="text/template">
 ## Haskell Integration (continued)
 
 ```console
@@ -229,23 +197,17 @@ EOF
 ```
 
 outputs `drv.json`, which is read in a dynamic action.
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ## Demo
 
-Notes: cells, toolchains, targets, dependency graph
-
----
-
+<aside class="notes"><p>cells, toolchains, targets, dependency graph</p>
+</aside></script></section><section  data-markdown><script type="text/template">
 ## Next
 
 * publish buck2.nix ruleset
 * upstream changes to buck2's prelude
 * remote execution
-
----
-
+</script></section><section  data-markdown><script type="text/template">
 ### Thank you
 
 <div style="justify-content: center; display: flex; align-items: center">
@@ -260,16 +222,11 @@ Notes: cells, toolchains, targets, dependency graph
 <div style="transform: rotate(-28deg); position: absolute; top: 2em; right: 1em; font-size: larger">Questions?</div>
 </div>
 
-Notes: convinced that combining buck2 + nix is a match
-
-          </textarea>
-        </section>
-      </div>
+<aside class="notes"><p>convinced that combining buck2 + nix is a match</p>
+</aside></script></section></div>
     </div>
 
     <script src="./dist/reveal.js"></script>
-
-    <script src="./mermaid/dist/mermaid.min.js"></script>
 
     <script src="./plugin/markdown/markdown.js"></script>
     <script src="./plugin/highlight/highlight.js"></script>
@@ -298,9 +255,6 @@ Notes: convinced that combining buck2 + nix is a match
         center: true,
         transition: 'default', // none/fade/slide/convex/concave/zoom
         slideNumber: true,
-        highlight: {
-          highlightOnLoad: false
-        },
         plugins: [
           RevealMarkdown,
           RevealHighlight,
@@ -313,29 +267,12 @@ Notes: convinced that combining buck2 + nix is a match
       // options from URL query string
       var queryOptions = Reveal().getQueryHash() || {};
 
-      var options = extend(defaultOptions, {"transition":"fade","_":["slides.md"],"static":true,"static-dirs":"assets","staticDirs":"assets"}, queryOptions);
+      var options = extend(defaultOptions, {"transition":"fade"}, queryOptions);
     </script>
 
 
     <script>
       Reveal.initialize(options);
-      Reveal.addEventListener('ready', function (event) {
-        const blocks = Reveal.getRevealElement().querySelectorAll('pre code:not(.mermaid)');
-        const hlp = Reveal.getPlugin('highlight');
-        blocks.forEach(hlp.highlightBlock);
-      });
-    </script>
-
-    <script>
-      const mermaidOptions = extend({ startOnLoad: false }, {});
-      mermaid.startOnLoad = false;
-      mermaid.initialize(mermaidOptions);
-      const cb = function (event) {
-        mermaid.init(mermaidOptions, '.stack.present > .present pre code.mermaid');
-        mermaid.init(mermaidOptions, '.slides > .present:not(.stack) pre code.mermaid');
-      }
-      Reveal.addEventListener('ready', cb);
-      Reveal.addEventListener('slidetransitionend', cb);
     </script>
   </body>
 </html>
